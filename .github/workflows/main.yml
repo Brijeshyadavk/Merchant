@@ -1,0 +1,38 @@
+name: CI
+
+on:
+  pull_request:
+    branches:
+      - master
+      
+jobs:
+  build:
+    runs-on: macOS-latest
+    steps:
+      - uses: actions/checkout@v2
+      - run: fastlane beta
+        env:
+          MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
+  SwiftLint:
+    run-on: buntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Github Action for SwiftLint
+    - uses: github/action-swiftlint@3
+      env: 
+        DEFAULT_BRANCH: master
+        GITHUB_TOKEN: ${{ secrets.GITHUB_Token }}
+  
+      
+  Test:
+    run-on: macOS-11
+    steps:
+    - uses: action/checkout@v2
+    - name: list available Xcode versions
+      run: ls /Applications | grep Xcode
+    - name: Select Xcode
+      run: sudo xcode-select -switch /Application/Xcode_13.0.app && /usr/binxcodebuild -version
+    - name: Run unit tests
+      run: xcodebuild test -scheme merchant-1-test -project merchant-1-test/merchant-1-test.xcodeproj -destination 'platform=iOS Simulator,name=iPhone 11,OS=15.0'
+          | xcpretty && xit ${PIPESTATUS[0]}
+  
