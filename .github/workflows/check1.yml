@@ -27,9 +27,15 @@ jobs:
 
       # Runs a single command using the runners shell
       - name: Select Xcode Version
-        uses: maxim-lobanov/setup-xcode@v1
+        uses: maxim-lobanov/setup-xcode@v2
         with:
           xcode-version: latest-stable
+          
+      - name: Setup ruby
+        uses: ruby/setup-ruby@v2
+        with:
+          ruby-version: 2.7.2
+          bundler-cache: true
           
       - name: Install Pods
         run: |
